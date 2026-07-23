@@ -1,0 +1,32 @@
+# ============================================
+# AI Engineering Roadmap — Dependencias base
+# ============================================
+
+# --- Núcleo Python ---
+pytest>=8.0
+mypy>=1.8
+python-dotenv>=1.0
+
+# --- AI/ML core ---
+transformers>=4.40
+torch>=2.2
+sentence-transformers>=2.5
+scikit-learn>=1.4
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+
+# --- Notebooks ---
+jupyter>=1.0
+ipykernel>=6.29
+
+# --- API clients (Level 1+) ---
+openai>=1.30
+anthropic>=0.30
+tiktoken>=0.7
+
+# --- Vector stores (Level 1+) ---
+chromadb>=0.5
+
+# --- Agentic (Level 3+) ---
+httpx>=0.27

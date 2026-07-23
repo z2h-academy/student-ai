@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+*.nbconvert.*
+
+# Env
+.env
+*.env.local
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Data
+data/
+*.parquet
+*.csv
+*.arrow
+
+# JSON configs (except .devcontainer)
+*.json
+!.devcontainer/*.json

@@ -1,0 +1,56 @@
+{
+  "name": "AI Engineering Roadmap",
+
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers",
+        "ms-toolsai.vscode-jupyter-cell-tags",
+        "ms-toolsai.vscode-jupyter-slideshow",
+        "ms-toolsai.vscode-jupyter-powertoys",
+        "ms-toolsai.datawrangler",
+        "charliermarsh.ruff",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "hashicorp.terraform",
+        "tamasfe.even-better-toml",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-vscode.remote-containers"
+      ]
+    }
+  },
+
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "editor.formatOnSave": true,
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+    "jupyter.defaultKernel": "python3",
+    "jupyter.askForKernelRestart": false,
+    "notebook.lineNumbers": "on",
+    "notebook.editor.wordWrap": "on"
+  },
+
+  "forwardPorts": [5432, 8888, 11434, 5000, 5050, 9000, 9001, 3000, 9090, 7777],
+
+  "postCreateCommand": "pip install --user uv && python3 -m ipykernel install --user --name=python3 --display-name='Python 3' && echo 'Codespace listo para AI Engineering.'"
+}
