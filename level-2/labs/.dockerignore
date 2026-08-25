@@ -1,0 +1,23 @@
+# level-2/labs/.dockerignore
+# Excluye del build de Docker lo que no hace falta en la imagen
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Env y secrets
+.env
+*.env.local
+
+# Git
+.git/
+.gitignore
+
+# Datos generados (se copian explicitamente via data/ si hacen falta)
+data/chroma_db/
+
+# Tests y herramientas
+.pytest_cache/
+.mypy_cache/

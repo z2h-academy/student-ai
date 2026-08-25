@@ -1,0 +1,15 @@
+torch>=2.1.0
+transformers>=4.36.0
+peft>=0.7.0
+bitsandbytes>=0.42.0
+trl>=0.7.0
+datasets>=2.16.0
+vllm>=0.3.0
+accelerate>=0.25.0
+pandas>=2.1.0
+pyarrow>=14.0.0
+python-dotenv>=1.0.0
+httpx>=0.25.0
+sentencepiece>=0.1.99
+protobuf>=4.25.0
+scipy>=1.11.0

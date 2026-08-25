@@ -13,6 +13,19 @@ services:
       - ollama_volume:/root/.ollama
     restart: unless-stopped
 
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme1234
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    restart: unless-stopped
+
   jupyter:
     image: jupyter/datascience-notebook:latest
     container_name: jupyter
@@ -27,3 +40,4 @@ services:
 
 volumes:
   ollama_volume:
+  postgres_volume:

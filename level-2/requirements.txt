@@ -1,0 +1,16 @@
+# level-2/requirements.txt
+# Dependencias para Level 2 — AI Systems Deployment
+
+# API
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+
+# Librarian (RAG de Level 1)
+chromadb>=0.5
+requests>=2.31
+python-dotenv>=1.0
+
+# Tests
+pytest>=8.0
+httpx>=0.27

@@ -1,0 +1,90 @@
+# level-5/k8s/api.yaml
+# Despliegue de la API librarian en Kubernetes.
+#
+# Validacion sin cluster:
+#   kubeconform -strict api.yaml
+#
+# En un cluster real (kind/minikube/nube):
+#   kubectl apply -f api.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librarian-api
+  labels:
+    app: librarian-api
+    level: "5"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: librarian-api
+  template:
+    metadata:
+      labels:
+        app: librarian-api
+    spec:
+      containers:
+        - name: api
+          image: python:3.12-slim
+          command:
+            - sh
+            - -c
+            - >
+              pip install --no-cache-dir fastapi uvicorn pydantic chromadb
+              requests python-dotenv prometheus-client &&
+              uvicorn api_prom:app --host 0.0.0.0 --port 8000
+          workingDir: /app
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: PYTHONPATH
+              value: /app:/app_l5
+            - name: OLLAMA_HOST
+              value: http://ollama:11434
+          volumeMounts:
+            - name: codigo-api
+              mountPath: /app
+              readOnly: true
+            - name: datos-kb
+              mountPath: /app/data
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+      volumes:
+        - name: codigo-api
+          hostPath:
+            path: /workspaces/student-ai/level-5/labs
+            type: Directory
+        - name: datos-kb
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: librarian-api
+spec:
+  selector:
+    app: librarian-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

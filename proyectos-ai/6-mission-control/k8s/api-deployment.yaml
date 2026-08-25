@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mission-control-api
+  namespace: ai-platform
+  labels:
+    app: mission-control-api
+    tier: api
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mission-control-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: mission-control-api
+        tier: api
+    spec:
+      containers:
+        - name: api
+          image: ai-engineering/api:latest
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: mission-control-secrets
+                  key: postgres-host
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: mission-control-secrets
+                  key: postgres-port
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mission-control-secrets
+                  key: postgres-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mission-control-secrets
+                  key: postgres-password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: mission-control-secrets
+                  key: postgres-db
+            - name: OLLAMA_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: mission-control-config
+                  key: ollama-endpoint
+            - name: PROMETHEUS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mission-control-config
+                  key: prometheus-url
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 12
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

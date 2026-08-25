@@ -1,0 +1,70 @@
+# ============================================================
+# ETL Pipeline Configuration — Medallion Architecture
+# Project: 1-triage (Urgency Classifier for Amazon Reviews)
+# ============================================================
+
+minio:
+  endpoint: "http://minio:9000"
+  bucket_raw: "bronze"
+  bucket_clean: "silver"
+  bucket_gold: "gold"
+
+# --- Bronze Layer ---
+bronze:
+  source_url: "https://raw.githubusercontent.com/bhavikjikadara/Amazon-Review-Dataset/refs/heads/main/Reviews.csv"
+  raw_path: "raw/Reviews.csv"
+  tmp_dir: "/tmp/1-triage-bronze"
+
+# --- Silver Layer ---
+silver:
+  input:
+    raw_csv: "bronze/raw/Reviews.csv"
+  cleaning:
+    required_columns:
+      - "Id"
+      - "ProductId"
+      - "UserId"
+      - "ProfileName"
+      - "HelpfulnessNumerator"
+      - "HelpfulnessDenominator"
+      - "Score"
+      - "Time"
+      - "Summary"
+      - "Text"
+    text_column: "Text"
+    summary_column: "Summary"
+    score_column: "Score"
+  output:
+    clean_parquet: "silver/clean/reviews.parquet"
+    train_parquet: "silver/splits/train.parquet"
+    test_parquet: "silver/splits/test.parquet"
+  split:
+    test_size: 0.2
+    random_state: 42
+    stratify_column: "urgencia"
+  kb:
+    chunks_parquet: "silver/kb/chunks.parquet"
+    chunk_max_sentences: 5
+
+# --- Gold Layer ---
+gold:
+  embedding_model: "all-MiniLM-L6-v2"
+  embedding_batch_size: 256
+  embedding_dimensions: 384
+  input:
+    kb_chunks: "silver/kb/chunks.parquet"
+    train: "silver/splits/train.parquet"
+    test: "silver/splits/test.parquet"
+  output:
+    kb_embeddings: "gold/amazon_reviews/embeddings/kb_chunks.parquet"
+    train_embeddings: "gold/amazon_reviews/embeddings/train_embeddings.parquet"
+    test_embeddings: "gold/amazon_reviews/embeddings/test_embeddings.parquet"
+
+# --- Classifier ---
+classifier:
+  model_path: "state/model.joblib"
+  report_path: "state/classification_report.json"
+  confusion_matrix_path: "state/confusion_matrix.json"
+  solver: "lbfgs"
+  max_iter: 1000
+  embedding_chunk_size: 5000

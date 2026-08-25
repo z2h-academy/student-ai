@@ -1,0 +1,40 @@
+# level-2/labs/.github/workflows/ci.yml
+# CI/CD: en cada push, corre los tests y construye la imagen.
+#
+# Nota: el alumno copia este archivo a la raiz de SU fork de student-ai
+# (no queda dentro de level-2/labs en el repo del profesor).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: level-2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Prepare data
+        run: |
+          mkdir -p data
+          cp ../level-1/labs/knowledge_base.md data/ 2>/dev/null || true
+
+      - name: Run tests
+        run: pytest labs/test_api.py -v

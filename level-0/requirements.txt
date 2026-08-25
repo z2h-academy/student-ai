@@ -1,0 +1,14 @@
+# level-0/requirements.txt
+# Dependencias para Level 0 - Fundamentos Software & IA
+
+# Labs 1-6: Python fundamentals
+pytest>=8.0
+mypy>=1.8
+
+# Labs 7-9: Deep Learning fundamentals
+transformers>=4.40
+torch>=2.2
+sentence-transformers>=2.5
+scikit-learn>=1.4
+matplotlib>=3.8
+numpy>=1.26

@@ -1,0 +1,23 @@
+# level-2/labs/docker-compose.yml
+# Orquesta la API librarian.
+#
+# Nota: Ollama ya corre como contenedor del stack (Level 1). La API usa
+# network_mode: host para alcanzarlo en localhost:11434 sin redes extra.
+#
+# Levanta: docker compose up -d --build
+# Detiene: docker compose down
+
+services:
+  librarian:
+    build:
+      context: ..
+      dockerfile: labs/Dockerfile
+    container_name: librarian-app
+    network_mode: host
+    environment:
+      - OLLAMA_HOST=http://localhost:11434
+    volumes:
+      - librarian-data:/code/data
+
+volumes:
+  librarian-data:
