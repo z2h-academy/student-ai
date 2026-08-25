@@ -44,9 +44,9 @@ def run(config: dict[str, Any] | None = None) -> pd.DataFrame:
 
     records: list[dict[str, Any]] = []
     chunk_id = 0
-    for _, row in df.iterrows():  # noqa: B007 — index not needed
-        text = row[text_col]
-        source_id = str(row["Id"])
+    for row in df.itertuples(index=False):
+        text = getattr(row, text_col)
+        source_id = str(row.Id)
         chunks = chunk_text(text, max_sentences=max_sent)
         for idx, chunk in enumerate(chunks):
             records.append(
